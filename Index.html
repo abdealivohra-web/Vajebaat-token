@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Vajebaat 1447H Token</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Arial; background:#f2f2f2; padding:20px; }
+    .box {
+      background:white;
+      padding:20px;
+      max-width:400px;
+      margin:auto;
+      border-radius:8px;
+      box-shadow:0 0 10px rgba(0,0,0,0.1);
+    }
+    input, button {
+      width:100%;
+      padding:10px;
+      margin-top:10px;
+      font-size:16px;
+    }
+    button {
+      background:green;
+      color:white;
+      border:none;
+      cursor:pointer;
+    }
+    .msg { margin-top:15px; font-weight:bold; }
+    .over { color:red; }
+  </style>
+</head>
+<body>
+
+<div class="box">
+  <h2>Vajebaat 1447H</h2>
+
+  <input id="its" placeholder="ITS No">
+  <input id="name" placeholder="Name">
+  <input id="mobile" placeholder="Mobile No">
+
+  <button onclick="getToken()">Get Token</button>
+
+  <div id="msg" class="msg"></div>
+</div>
+
+<script>
+function getToken() {
+  const its = document.getElementById("its").value.trim();
+  const name = document.getElementById("name").value.trim();
+  const mobile = document.getElementById("mobile").value.trim();
+
+  if (!its || !name || !mobile) {
+    alert("Please fill all details");
+    return;
+  }
+
+  const today = new Date().toISOString().split("T")[0];
+  const savedDate = localStorage.getItem("date");
+
+  if (savedDate !== today) {
+    localStorage.setItem("date", today);
+    localStorage.setItem("count", 0);
+    localStorage.setItem("tokens", JSON.stringify([]));
+  }
+
+  let count = Number(localStorage.getItem("count")) || 0;
+
+  if (count >= 15) {
+    document.getElementById("msg").innerHTML =
+      "<span class='over'>❌ Tokens Over for Today</span>";
+    return;
+  }
+
+  count++;
+  localStorage.setItem("count", count);
+
+  const token = "VJ-1447-" + String(count).padStart(2, "0");
+
+  const tokens = JSON.parse(localStorage.getItem("tokens")) || [];
+  tokens.push({ its, name, mobile, token, date: today });
+  localStorage.setItem("tokens", JSON.stringify(tokens));
+
+  document.getElementById("msg").innerHTML =
+    "✅ Your Token No: <b>" + token + "</b>";
+
+  document.getElementById("its").value = "";
+  document.getElementById("name").value = "";
+  document.getElementById("mobile").value = "";
+}
+</script>
+
+</body>
+</html>
